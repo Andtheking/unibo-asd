@@ -1,6 +1,6 @@
 
 # Nome file principale senza estensioni
-MAIN_FILE_NAME = shooting-stars
+MAIN_FILE_NAME = nome
 
 # Variabili per i file
 SOURCE_FILE = $(MAIN_FILE_NAME).c
