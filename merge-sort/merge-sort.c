@@ -345,7 +345,7 @@ int test(int *v, int n)
 
     assert(tmp != NULL); /* evita un warning con VS */
     memcpy(tmp, v, n*sizeof(*v));
-    qsort(tmp, n, sizeof(*tmp), compare); // Libreria standard di C, ordina una array, descritto nel sito del prof
+    qsort(tmp, n, sizeof(*tmp), compare); /* Libreria standard di C, ordina una array, descritto nel sito del prof */
     tstart = clock();
     sort(v, n);
     elapsed = clock() - tstart;
