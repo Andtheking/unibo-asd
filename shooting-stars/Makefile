@@ -1,6 +1,6 @@
 # Variabili per i file
-SOURCE_FILE = uova-di-fibonacci.c
-OUTPUT_FILE = uova-di-fibonacci.out
+SOURCE_FILE = shooting-stars.c
+OUTPUT_FILE = shooting-stars.out
 
 # Nel caso di altri file
 HEADER_FILES = 

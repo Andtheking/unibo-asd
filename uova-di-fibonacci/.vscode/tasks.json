@@ -4,19 +4,13 @@
         {
             "label": "Build C Program",
             "type": "shell",
-            "command": "gcc",
-            "args": [
-                "-g",  // Inclusione delle informazioni per il debug
-                "${fileDirname}/${fileBasenameNoExtension}.c",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}.exe"
-            ],
+            "command": "make",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "problemMatcher": ["$gcc"],
-            "detail": "Compila il programma C utilizzando GCC"
+            "detail": "Compila il programma C con Makefile"
         }
     ]
 }
