@@ -21,7 +21,10 @@ all: $(OUTPUT_FILE)
 
 $(OUTPUT_FILE): $(SOURCE_FILE) $(HEADER_FILES)
 	gcc -g -Wall -Wpedantic -std=c90 $(SOURCE_FILE) $(HEADER_FILES) -lm -o $(OUTPUT_FILE)
-	chmod +x $(OUTPUT_FILE)
+	chmod +x ./$(OUTPUT_FILE)
+
+valgrind: $(OUTPUT_FILE)
+	valgrind ./$(OUTPUT_FILE)
 
 # Pulizia dei file prodotti
 clean:
