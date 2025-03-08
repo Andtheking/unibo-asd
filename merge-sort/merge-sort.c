@@ -225,24 +225,7 @@ specifica è indicata nei commenti al codice.
 #include <time.h>
 #include <assert.h>
 
-/* Fonde i sottovettori ordinati `v[p..q]` e `v[q+1..r]`. Usa
-   `buffer[]` come array temporaneo. `buffer[]` ha la stessa lunghezza
-   dell'intero array `v[]`. */
-void merge(int *v, int p, int q, int r, int *buffer)
-{
-    /* [TODO] */
-}
-
-/* Ordina il sottovettore buffer[p..r] (estremi inclusi) usando
-   l'algoritmo Merge-Sort ricorsivo. L'array `buffer` ha lunghezzza n
-   (pari all'intera lunghezza di `v[]`) ed è allocato dal chiamante;
-   può essere utilizzato come buffer temporaneo per le operazioni
-   `merge()`, senza necessità di allocare un nuovo buffer ad ogni
-   chiamata. */
-void merge_sort(int *v, int p, int r, int *buffer)
-{
-    /* [TODO] */
-}
+#include "solution.h"
 
 /* Ordina l'array v[] di lunghezza n>=0 usando Merge-Sort. L'utente
    invoca questa funzione, che a sua volta farà partire l'algoritmo

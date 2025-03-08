@@ -8,7 +8,7 @@ OUTPUT_FILE = $(MAIN_FILE_NAME).out
 
 # Nel caso di altri file scriverli con uno spazio tra loro
 # Se non ci sono lasciare vuoto
-HEADER_FILES = 
+HEADER_FILES = solution.c 
 
 # Regola di default
 all: $(OUTPUT_FILE)
