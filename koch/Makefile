@@ -8,7 +8,7 @@ OUTPUT_FILE = $(MAIN_FILE_NAME).out
 
 # Nel caso di altri file scriverli con uno spazio tra loro
 # Se non ci sono lasciare vuoto
-HEADER_FILES = libpsgraph.c
+HEADER_FILES = lib/libpsgraph.c solution.c
 
 # Regola di default
 all: $(OUTPUT_FILE)
@@ -21,7 +21,10 @@ all: $(OUTPUT_FILE)
 
 $(OUTPUT_FILE): $(SOURCE_FILE) $(HEADER_FILES)
 	gcc -g -Wall -Wpedantic -std=c90 $(SOURCE_FILE) $(HEADER_FILES) -lm -o $(OUTPUT_FILE)
-	chmod +x $(OUTPUT_FILE)
+	chmod +x ./$(OUTPUT_FILE)
+
+valgrind: $(OUTPUT_FILE)
+	valgrind ./$(OUTPUT_FILE)
 
 # Pulizia dei file prodotti
 clean:

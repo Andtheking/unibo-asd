@@ -180,44 +180,9 @@ costituiti da tre curve di Koch di ordine $n$ e lunghezza $x$ (Figura
 ***/
 #include <stdio.h>
 #include <stdlib.h>
-#include "libpsgraph.h"
 
-
-/* Variabile globale solo per comodità di risposta */
-int segmenti = 0;
-
-/* Disegna la curva di Koch di ordine `n` e lunghezza `x`. */
-void koch(double x, int n)
-{
-    if (n == 0)
-    {
-        draw(x);
-        segmenti++;
-        return;
-    }
-
-    koch(x/3, n-1);
-    turn(-45);
-    koch(x/3, n-1);
-    turn(90);
-    koch(x/3, n-1);
-    turn(-45);
-    koch(x/3, n-1);
-    
-
-}
-
-void fiocco_di_loch(double x, int n)
-{
-
-    koch(x,n);
-
-    turn(30+90);
-    koch(x,n);
-
-    turn(30+90);
-    koch(x,n);
-}
+#include "lib/libpsgraph.h"
+#include "solution.h"
 
 
 #define GRADO 4
@@ -231,7 +196,7 @@ int main(void)
        n) definita sopra e invocandola opportunamente (si suggerisce
        di usare n=4, x=50). */
 
-    start ("curva-di-koch.ps");
+    start("curva-di-koch.ps");
     koch(MM, GRADO);
     end();
 
