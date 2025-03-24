@@ -1,5 +1,7 @@
 /****************************************************************************
- *
+ * Andrea Maria Castronovo, classe A
+ * 
+ * 
  * minheap.c -- Min-Heap binario
  *
  * Copyright (C) 2021--2025 Moreno Marzolla
@@ -289,6 +291,12 @@ void minheap_print(const MinHeap *h)
 
     assert(h != NULL);
 
+    printf("\n** Contenuto vettore pos:\n\n");
+    for (i = 0; i < h->size; i++)
+    {
+        printf("pos[%d]=%d ", i, h->pos[i]);
+    }
+
     printf("\n** Contenuto dello heap:\n\n");
     printf("n=%d size=%d\n", h->n, h->size);
     printf("Contenuto dell'array heap[] (stampato a livelli):\n");
@@ -308,8 +316,13 @@ void minheap_print(const MinHeap *h)
 
 void minheap_clear( MinHeap *h )
 {
-    assert(h != NULL);
+    int i;
+
+    assert(h != NULL); /* Costa 1 */
     h->n = 0;
+
+    for (i = 0; i < h->size; i++) /* Costa O(n) */
+        h->pos[i] = -1; /* https://www.moreno.marzolla.name/teaching/LabASD/handouts/minheap.html#ottimizzazione-di-minheap_change_prio */
 }
 
 /* Costruisce un min-heap vuoto che può contenere al massimo
@@ -323,7 +336,7 @@ MinHeap *minheap_create(int size)
     h->size = size;
     h->heap = (HeapElem*)malloc(size * sizeof(*(h->heap)));
     assert(h->heap != NULL);
-    h->pos = NULL; /* TODO qualora si decidesse di usare l'array
+    h->pos = (int*)malloc(size*sizeof(int)); /* qualora si decidesse di usare l'array
                       `pos`, occorrerà allocarlo e inizializzarlo
                       qui. Occorrerà poi liberare la memoria nella
                       funzione `minheap_destroy()` */
@@ -337,6 +350,7 @@ void minheap_destroy( MinHeap *h )
 
     h->n = h->size = 0;
     free(h->heap);
+    free(h->pos);
     free(h);
 }
 
@@ -353,7 +367,7 @@ void minheap_destroy( MinHeap *h )
  ** eliminarle se non servono).
  **/
 
-/* Funzione di supporto: restituisce 1 sse l'indice `i` appartiene
+/* Funzione di supporto: restituisce 1 se l'indice `i` appartiene
    all'intervallo degli indici validi degli elementi validi nell'array
    che rappresenta lo heap. */
 static int valid(const MinHeap *h, int i)
@@ -367,16 +381,26 @@ static int valid(const MinHeap *h, int i)
 static void swap(MinHeap *h, int i, int j)
 {
     HeapElem tmp;
+    int tmpPos;
 
     assert(h != NULL);
     assert(valid(h, i));
     assert(valid(h, j));
 
+    /* Devo swappare anche l'array pos, ma devo tenere in considerazione che le posizioni del vettore sono le chiavi stesse */
+    tmpPos = h->pos[h->heap[i].key];
+    h->pos[h->heap[i].key] = h->pos[h->heap[j].key];
+    h->pos[h->heap[j].key] = tmpPos;
+
     tmp = h->heap[i];
     h->heap[i] = h->heap[j];
     h->heap[j] = tmp;
 
+    
+
 }
+
+
 
 /* Funzione di supporto: restituisce l'indice del padre del nodo i */
 static int parent(const MinHeap *h, int i)
@@ -505,7 +529,9 @@ void minheap_insert(MinHeap *h, int key, double prio)
     
     h->heap[h->n].key = key;
     h->heap[h->n].prio = prio;
+    h->pos[key] = h->n;
     h->n++;
+
     move_up(h, h->n - 1);
     
     minheap_print(h);
@@ -550,9 +576,11 @@ int minheap_delete_min(MinHeap *h)
     int key;
     assert( !minheap_is_empty(h) );
 
-    key = h->heap[minheap_min(h)].key;
+    key = minheap_min(h);
     swap(h, 0, h->n - 1);
+    h->pos[h->heap[h->n-1].key] = -1;
     h->n--;
+
     move_down(h, 0);    
     return key;
 
@@ -569,9 +597,10 @@ void minheap_change_prio(MinHeap *h, int key, double newprio)
     assert(h != NULL);
     assert(key >= 0 && key < h->size);
 
-
-    element = search_key(h, 0, key); /* Parte che impiega O(n) */
-
+    /* Parte che impiega O(n) */ 
+    /* element = search_key(h, 0, key); */
+    
+    element = h->pos[key];
     assert(valid(h, element));
 
     old = h->heap[element].prio;

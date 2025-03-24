@@ -29,7 +29,7 @@ typedef struct {
 
 typedef struct {
     HeapElem *heap;
-    int *pos; /* TODO: non inizializzato! Usare solo dopo una implementazione funzionante di minheap_change_prio() in cui la chiave da modificare si trova con una normale ricerca lineare sull'array heap[] */
+    int *pos; /* non inizializzato! Usare solo dopo una implementazione funzionante di minheap_change_prio() in cui la chiave da modificare si trova con una normale ricerca lineare sull'array heap[] */
     int n; /* quante coppie (chiave, prio) sono effettivamente presenti nello heap */
     int size; /* massimo numero di coppie (chiave, prio) che possono essere contenuti nello heap */
 } MinHeap;

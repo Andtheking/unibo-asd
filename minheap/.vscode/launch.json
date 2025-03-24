@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/minheap-main.out",
-            "args": ["minheap1.in"],
+            "args": ["minheap.in"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
