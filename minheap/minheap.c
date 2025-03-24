@@ -360,7 +360,7 @@ static int valid(const MinHeap *h, int i)
 {
     assert(h != NULL);
 
-    return ((i >= 0) && (i <= h->n));
+    return ((i >= 0) && (i < h->n));
 }
 
 /* Funzione di supporto: scambia heap[i] con heap[j] */
@@ -458,6 +458,7 @@ static void move_down(MinHeap *h, int i)
     while(minc != -1 && h->heap[minc].prio < h->heap[i].prio)
     {
         swap(h, minc, i);
+        i = minc;
         minc = min_child(h,minc);
     }
     
@@ -509,11 +510,11 @@ void minheap_insert(MinHeap *h, int key, double prio)
 
     h->heap[h->n].key = key;
     h->heap[h->n].prio = prio;
-    move_up(h, h->n);
     h->n++;
+    move_up(h, h->n - 1);
     
     minheap_print(h);
-
+    
 }
 
 /* Cerca in tutto l'heap per trovare il nodo con chiave data
@@ -531,7 +532,7 @@ int search_key(MinHeap *h, int start, int key)
     if (!valid(h, start))
         return -1;
 
-    found = h->heap[start].key == key? key : -1;
+    found = h->heap[start].key == key? start : -1;
 
     if (found == -1 && valid(h, l_child))
     {
@@ -554,7 +555,7 @@ int minheap_delete_min(MinHeap *h)
     assert( !minheap_is_empty(h) );
 
     int key = h->heap[0].key;
-    swap(h, 0, h->n);
+    swap(h, 0, h->n - 1);
     h->n--;
     move_down(h, 0);    
     return key;
@@ -589,4 +590,5 @@ void minheap_change_prio(MinHeap *h, int key, double newprio)
     else if (valid(h, parente) && h->heap[parente].prio > h->heap[element].prio)
         move_up(h, element);
 
+    minheap_print(h);
 }
