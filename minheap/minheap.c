@@ -410,7 +410,6 @@ static int rchild(const MinHeap *h, int i)
    priorità minima. Se `i` non ha figli, restituisce -1 */
 static int min_child(const MinHeap *h, int i)
 {
-    /* FIXME Riguardare */
     int min_child;
     int left;
     int right;
@@ -451,8 +450,6 @@ static void move_up(MinHeap *h, int i)
    la posizione corretta. */
 static void move_down(MinHeap *h, int i)
 {
-    /* FIXME */
-
     int minc = min_child(h, i);
     
     while(minc != -1 && h->heap[minc].prio < h->heap[i].prio)
@@ -506,8 +503,6 @@ void minheap_insert(MinHeap *h, int key, double prio)
     assert((key >= 0) && (key < h->size));
     
     
-    /* FIXME */
-
     h->heap[h->n].key = key;
     h->heap[h->n].prio = prio;
     h->n++;
@@ -552,9 +547,10 @@ int search_key(MinHeap *h, int start, int key)
    restituisce la chiave associata alla priorità minima. */
 int minheap_delete_min(MinHeap *h)
 {
+    int key;
     assert( !minheap_is_empty(h) );
 
-    int key = h->heap[0].key;
+    key = h->heap[minheap_min(h)].key;
     swap(h, 0, h->n - 1);
     h->n--;
     move_down(h, 0);    
@@ -567,17 +563,28 @@ int minheap_delete_min(MinHeap *h)
    può essere maggiore, minore o uguale alla precedente. */
 void minheap_change_prio(MinHeap *h, int key, double newprio)
 {
+    int old;
+    int element;
+
     assert(h != NULL);
     assert(key >= 0 && key < h->size);
 
 
-    /* FIXME */
+    element = search_key(h, 0, key); /* Parte che impiega O(n) */
 
-    int element = search_key(h, 0, key);
-    
     assert(valid(h, element));
 
+    old = h->heap[element].prio;
     h->heap[element].prio = newprio;
+
+    if (newprio > old) /* Parte che impiega O(logn)*/
+        move_down(h, element);
+    else
+        move_up(h, element);
+    
+    /* 
+
+    VECCHIO
 
     int l_child = lchild(h, element);
     int r_child = rchild(h, element);
@@ -589,6 +596,5 @@ void minheap_change_prio(MinHeap *h, int key, double newprio)
         move_down(h, element);
     else if (valid(h, parente) && h->heap[parente].prio > h->heap[element].prio)
         move_up(h, element);
-
-    minheap_print(h);
+    */
 }
