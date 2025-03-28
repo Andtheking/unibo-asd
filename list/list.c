@@ -204,7 +204,7 @@ essere già presente in `L`.
    nell'interfaccia descritta nel file <list.h>), è dichiarata
    "static" in modo che non sia visibile esternamente a questo file
    sorgente. */
-static ListNode *list_new_node(int v)
+static ListNode *list_new_node(ListInfo v)
 {
     ListNode *r = (ListNode *)malloc(sizeof(ListNode));
     assert(r != NULL); /* evitiamo un warning con VS */
@@ -237,11 +237,21 @@ int list_length(const List *L)
     return L->length;
 }
 
+/* Fatta dal prof: dati due nodi n1, n2 rende n2 successore di n1 */
+static void list_join(ListNode *n1, ListNode *n2)
+{
+    
+    assert(n1 != NULL);
+    assert(n2 != NULL);
 
+    n1->succ = n2;
+    n2->pred = n1;
+}
 
 void list_clear(List *L)
 {
-    /* TODO */
+    while (L->length != 0)
+        list_remove_first(L);
 }
 
 void list_destroy(List *L)
@@ -274,8 +284,16 @@ int list_is_empty(const List *L)
 
 ListNode *list_search(const List *L, ListInfo k)
 {
-    /* TODO */
-    return NULL; /* Sostituire con il valore di ritorno corretto */
+    ListNode *cursor = list_first(L);
+
+    while (cursor != L->sentinel)
+    {
+        if (cursor->val == k)
+            return cursor;
+        cursor = cursor->succ;
+    }
+
+    return L->sentinel; /* Sostituire con il valore di ritorno corretto */
 }
 
 ListNode *list_first(const List *L)
@@ -292,14 +310,22 @@ ListNode *list_last(const List *L)
     return L->sentinel->pred;
 }
 
-
 static void list_insert_after(List *L, ListNode *n, ListInfo k)
 {
     /* Fatto dal prof in classe */
 
+
     ListNode *new_node, *succ_of_n;
     succ_of_n = n->succ;
 
+    new_node = list_new_node(k);
+
+    list_join(n, new_node);
+    list_join(new_node, succ_of_n);
+
+    L->length++;
+
+    #if 0
     /* Creo il nodo */
     new_node = (ListNode*)malloc(sizeof(ListNode));
     assert(new_node != NULL);
@@ -315,49 +341,72 @@ static void list_insert_after(List *L, ListNode *n, ListInfo k)
     /* Andando indietro il successivo del vecchio N deve farmi arrivare al nuovo nodo */
     succ_of_n->pred = new_node;
 
+    L->length++;
+    #endif
 }
 
 /* Inserisce un nuovo nodo contenente k all'inizio della lista */
 void list_add_first(List *L, ListInfo k)
 {
     assert(L != NULL);
-    /* TODO */
+    list_insert_after(L, L->sentinel, k);
 }
 
 /* Inserisce un nuovo nodo contenente k alla fine della lista */
 void list_add_last(List *L, ListInfo k)
 {
     assert(L != NULL);
-    /* TODO */
+
+    list_insert_after(L, L->sentinel->pred, k);
 }
 
 /* Rimuove il nodo n dalla lista L */
 void list_remove(List *L, ListNode *n)
 {
+    ListNode *pred, *succ;
+    
     assert(L != NULL);
     assert(n != NULL);
     assert(n != list_end(L));
-    /* TODO */
+
+    pred = n->pred;
+    succ = n->succ;
+
+    pred->succ = succ;
+    succ->pred = pred;
+
+    free(n);    
+    L->length--;
 }
 
 ListInfo list_remove_first(List *L)
 {
+    ListNode *to_delete;
+    ListInfo key;
     assert( !list_is_empty(L) );
-    /* TODO */
-    return -1; /* Sostituire con il valore di ritorno corretto */
+
+    to_delete = list_first(L);
+    key = to_delete->val;
+    list_remove(L, to_delete);
+
+    return key; /* Sostituito con il valore di ritorno corretto */
 }
 
 ListInfo list_remove_last(List *L)
 {
+    ListNode *to_delete;
+    ListInfo key;
     assert( !list_is_empty(L) );
-    /* TODO */
-    return -1; /* Sostituire con il valore di ritorno corretto */
+
+    to_delete = list_last(L);
+    key = to_delete->val;
+    list_remove(L, to_delete);
+    return key; /* Sostituito con il valore di ritorno corretto */
 }
 
 ListNode *list_succ(const ListNode *n)
 {
     assert(n != NULL);
-
     return n->succ;
 }
 
@@ -370,23 +419,48 @@ ListNode *list_pred(const ListNode *n)
 
 ListNode *list_nth_element(const List *L, int n)
 {
-    /* TODO */
-    return NULL; /* Sostituire con il valore di ritorno corretto */
+    ListNode *cursor = list_first(L);
+    int i = 0; /* Non conto la sentinella */
+
+    while (i < n && cursor != list_end(L))
+    {
+        i++;
+        cursor = cursor->succ;
+    }
+
+    return cursor;
 }
+
+
+
 
 void list_concat(List *L1, List *L2)
 {
     assert(L1 != NULL);
     assert(L2 != NULL);
 
-    /* TODO */
+    list_join(list_last(L1), list_first(L2));
+    list_join(list_last(L2), list_last(L1));
+    L1->length += L2->length;
+
+    free(L2->sentinel);
 }
 
 int list_equal(const List *L1, const List *L2)
 {
+    ListNode *cursor1 = list_first(L1);
+    ListNode *cursor2 = list_first(L2);
+
     assert(L1 != NULL);
     assert(L2 != NULL);
+    
+    while (cursor1->val == cursor2->val && cursor1 != L1->sentinel)
+    {
+        cursor1 = cursor1->succ;
+        cursor2 = cursor2->succ;
+    }
 
-    /* TODO */
-    return -1; /* Sostituire con il valore di ritorno corretto */
+    if (cursor1 == L1->sentinel && cursor2 == L2->sentinel)
+        return 1;
+    return 0;
 }
