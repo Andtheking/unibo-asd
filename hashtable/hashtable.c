@@ -36,7 +36,7 @@ singole funzioni.
 Il file [hashtable.c](hashtable.c) fornito contiene alcune funzioni
 già implementate (è possibile riscriverle da zero se si
 preferisce). Si richiede di completare quelle indicate con il commento
-`[TODO]`.
+`TODO`.
 
 La tabella hash è rappresentata dalla struttura `HashTable` così
 definita:
@@ -250,9 +250,9 @@ HashTable *ht_create(const int size)
     assert(h != NULL);
     h->size = size;
     h->values_count = 0;
-    h->items = (HashNode **)malloc(h->size * sizeof(*(h->items)));
+    h->items = (HashNode **)malloc(h->size * sizeof(*(h->items))); /* Vettore di struct allocato dinamicamente */
     assert(h->items != NULL);
-    for (i = 0; i < h->size; i++)
+    for (i = 0; i < h->size; i++) /* Inizializza items */
     {
         h->items[i] = NULL;
     }
@@ -293,22 +293,71 @@ static void free_node(HashNode *n)
     free(n);
 }
 
-int ht_insert(HashTable *h, const char *key, int value)
+/* Restituisce il primo elemento della lista di nodi aventi lo stesso hash */
+static HashNode *ht_get_key_list(HashTable *h, const char *key)
 {
-    /* [TODO] */
-    return -1; /* Cambiare il valore di ritorno in modo opportuno */
+    unsigned long hash_key = hash_function(h, encode(key));
+    return h->items[hash_key];
 }
 
 HashNode *ht_search(HashTable *h, const char *key)
 {
-    /* [TODO] */
-    return NULL; /* Cambiare il valore di ritorno in modo opportuno */
+    HashNode *search = ht_get_key_list(h, key);
+
+    while (search != NULL && !keys_equal(key, search->key))
+        search = search->next;
+
+    return search; /* Cambiare il valore di ritorno in modo opportuno */
 }
+
+int ht_insert(HashTable *h, const char *key, int value)
+{
+    HashNode *search = ht_search(h, key);
+    HashNode *list = ht_get_key_list(h, key);
+
+    if (search == NULL)
+    {
+        h->items[hash_function(h, encode(key))] = hashtable_new_node(key, value, list);
+        h->values_count++;
+        return 1;
+    }
+    else 
+    {
+        search->value = value;
+        return 0;
+    }
+
+}
+
+
 
 int ht_delete(HashTable *h, const char *key)
 {
-    /* [TODO] */
-    return -1; /* Cambiare il valore di ritorno in modo opportuno */
+    int hash_index = hash_function(h, encode(key));
+
+    HashNode *hn = h->items[hash_index];
+    HashNode *prev = NULL;
+
+    while (hn != NULL && !keys_equal(hn->key, key))
+    {
+        prev = hn; 
+        hn = hn->next;
+    }
+
+    if (hn == NULL)
+        return 0;
+
+    if (keys_equal(hn->key, key))
+    {
+        if (prev) 
+            prev->next = hn->next;
+        else
+            h->items[hash_index] = hn->next;
+        free(hn);
+        h->values_count--;
+    }
+
+    return 1;
 }
 
 void ht_clear(HashTable *h)
