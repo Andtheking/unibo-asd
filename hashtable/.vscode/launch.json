@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/hashtable-main.out",
-            "args": ["hashtable4.in"],
+            "args": ["hashtable2.in"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

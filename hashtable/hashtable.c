@@ -347,16 +347,14 @@ int ht_delete(HashTable *h, const char *key)
     if (hn == NULL)
         return 0;
 
-    if (keys_equal(hn->key, key))
-    {
-        if (prev) 
-            prev->next = hn->next;
-        else
-            h->items[hash_index] = hn->next;
-        free(hn);
-        h->values_count--;
-    }
-
+    
+    if (prev) 
+        prev->next = hn->next;
+    else
+        h->items[hash_index] = hn->next;
+    free(hn);
+    h->values_count--;
+   
     return 1;
 }
 
