@@ -199,9 +199,9 @@ Graph_type graph_type(const Graph *g)
     return g->t;
 }
 
-
 void graph_add_edge(Graph *g, int src, int dst, double weight)
 {
+    Edge *newEdge;
     assert((src >= 0) && (src < graph_n_nodes(g)));
     assert((dst >= 0) && (dst < graph_n_nodes(g)));
 
@@ -221,6 +221,28 @@ void graph_add_edge(Graph *g, int src, int dst, double weight)
        - Si incrementa il grado entrante di `dst`;
 
        - Si incrementa il numero di archi del grafo.
+
+    */
+   
+
+    /* Creazione dell'arco in SRC, da fare in entrambi i tipi di grafo */
+    newEdge = (Edge*)malloc(sizeof(Edge));
+    newEdge->src = src;
+    newEdge->dst = dst;
+
+    if (g->edges[src] != NULL)
+        newEdge->next = g->edges[src];
+    else
+        newEdge->next = NULL;
+
+    g->edges[src] = newEdge;
+    newEdge->weight = weight;
+    g->out_deg[src]++;
+    g->in_deg[dst]++;
+    g->m++;
+
+
+    /*
 
        Se il grafo è NON ORIENTATO:
 
@@ -243,7 +265,27 @@ void graph_add_edge(Graph *g, int src, int dst, double weight)
        peggiora il costo asintotico dell'inserimento, che non è più O(1)
        ma diventa proporzionale al grado uscente di `src`. */
 
-    /* [TODO] */
+    /* Se fosse non direzionato, allora bisogna creare l'arco anche in dst*/
+    if (g->t == GRAPH_UNDIRECTED)
+    {
+
+        newEdge = (Edge*)malloc(sizeof(Edge));
+        newEdge->src = dst;
+        newEdge->dst = src;
+        if (g->edges[dst] != NULL)
+            newEdge->next = g->edges[dst];
+        else
+            newEdge->next = NULL;
+        
+        g->edges[dst] = newEdge;
+        newEdge->weight = weight;
+        g->out_deg[dst]++;
+        g->in_deg[src]++;
+        g->m++;
+
+    }
+
+    
 }
 
 /* Funzione ricorsiva ausiliaria che rimuove l'arco che porta al nodo
