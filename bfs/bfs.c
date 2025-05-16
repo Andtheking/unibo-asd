@@ -210,7 +210,11 @@ int bfs( const Graph *g,
                     lunghezza `n`. */
          )
 {
-    /* [TODO] */
+
+    
+
+
+    /* TODO */
     return 0;
 }
 

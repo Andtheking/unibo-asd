@@ -32,8 +32,7 @@ Università di Milano)
 Implementare la struttura dati "lista doppiamente concatenata con
 sentinella", la cui interfaccia è specificata nel file
 [list.h](list.h). Nel file [list.c](list.c) allegato sono già presenti
-alcune funzioni; si chiede di completare quelle con il commento
-`[TODO]`.
+alcune funzioni; si chiede di completare quelle con il commento "TODO".
 
 In una lista doppiamente concatenata, ogni nodo (che ha tipo
 `ListNode`) contiene un attributo `val` di tipo `ListInfo` (che qui è
