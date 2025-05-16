@@ -29,7 +29,7 @@ int main( int argc, char *argv[] )
 {
     Graph *G;
     FILE *filein = stdin;
-
+    int nodo_richiesto; /* Per autovalutazione su virtuale */
     if (argc != 2) {
         fprintf(stderr, "Invocare il programma con: %s file_grafo\n", argv[0]);
         return EXIT_FAILURE;
@@ -45,6 +45,11 @@ int main( int argc, char *argv[] )
 
     G = graph_read_from_file(filein);
     graph_print(G);
+    
+    nodo_richiesto = 821;
+    printf("Grado entrante del nodo %d: %d\n", nodo_richiesto, G->in_deg[nodo_richiesto]);
+    printf("Grado uscente del nodo %d: %d\n", nodo_richiesto, G->out_deg[nodo_richiesto]);
+    
     graph_destroy(G);
     if (filein != stdin) fclose(filein);
 
